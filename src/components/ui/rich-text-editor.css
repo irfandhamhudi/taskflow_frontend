@@ -1,0 +1,20 @@
+/* Basic mention styling */
+.mention {
+  color: var(--primary);
+  background-color: var(--primary-foreground);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.3rem;
+  font-weight: 500;
+}
+
+.tiptap {
+  cursor: text !important;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
