@@ -17,7 +17,7 @@ export default defineConfig({
     proxy: {
       // Proxy semua API biasa
       "/api": {
-        target: "http://localhost:5000",
+        target: "https://taskflowsapi.netlify.app",
         changeOrigin: true,
         secure: false,
         // rewrite: (path) => path.replace(/^\/api/, ""), // optional: kalau backend tidak pakai prefix /api
@@ -25,7 +25,7 @@ export default defineConfig({
 
       // KHUSUS UNTUK SOCKET.IO — ini yang paling penting!
       '/socket.io': {
-        target: 'http://localhost:5000', // Ganti dengan URL backend Anda
+        target: 'https://taskflowsapi.netlify.app', // Ganti dengan URL backend Anda
         ws: true,
       },
     },
