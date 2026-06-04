@@ -25,7 +25,7 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`border-2 border-dashed bg-muted rounded flex flex-col w-[85vw] sm:w-[350px] md:w-80 shrink-0 transition-all snap-center ${isOver ? 'border-muted-foreground' : ''
+      className={`border-2 border-dashed bg-muted rounded flex flex-col w-full md:w-80 md:shrink-0 transition-all md:snap-center ${isOver ? 'border-muted-foreground' : ''
         }`}
     >
       <div className="flex items-center justify-between p-4">

@@ -37,7 +37,7 @@ export default function KanbanView({
       {/* Container utama dengan ref untuk scroll */}
       <div
         ref={scrollContainerRef}
-        className="flex flex-row gap-4 h-full min-w-0 pb-6 overflow-x-auto snap-x snap-mandatory px-4 md:px-0 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex flex-col md:flex-row gap-4 h-full min-w-0 pb-6 overflow-y-auto md:overflow-x-auto md:snap-x md:snap-mandatory px-4 md:px-0 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {columns.map((column) => (
           <KanbanColumn
