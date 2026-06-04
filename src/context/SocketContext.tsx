@@ -29,9 +29,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     // Hanya buat socket sekali
     if (socketRef.current) return;
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const cleanApiUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
-    const socketIo = io(API_URL, {
+    const socketIo = io(cleanApiUrl, {
       withCredentials: true,
       transports: ['polling', 'websocket'],
       reconnection: true,
