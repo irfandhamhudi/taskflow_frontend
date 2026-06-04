@@ -427,7 +427,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)] lg:h-[calc(100vh-230px)] overflow-y-auto lg:overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-320px)] lg:h-[calc(100vh-230px)] overflow-y-auto lg:overflow-hidden">
       {/* Left Sidebar: Unscheduled Tasks */}
       {showUnscheduled && (
         <Card className="w-full lg:w-80 flex flex-col h-[300px] lg:h-full shrink-0 border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
@@ -515,7 +515,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
       )}
 
       {/* Right Sidebar: Timeline Gantt Grid */}
-      <Card className="flex-1 flex flex-col h-full overflow-hidden border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
+      <Card className="flex-1 flex flex-col h-full shrink-0 overflow-hidden border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
         {/* Timeline Header */}
         <div className="p-4 border-b flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-muted/20">
           <div className="flex items-center gap-3">
