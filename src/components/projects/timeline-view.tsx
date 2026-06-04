@@ -55,6 +55,12 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   const [isResizing, setIsResizing] = useState<'start' | 'due' | null>(null);
   const [showUnscheduled, setShowUnscheduled] = useState(true);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setShowUnscheduled(false);
+    }
+  }, []);
+
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
   const scrollThumbRef = useRef<HTMLDivElement>(null);
