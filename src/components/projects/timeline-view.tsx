@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  format, 
-  addDays, 
-  subDays, 
-  eachDayOfInterval, 
-  isSameDay, 
-  isToday, 
-  startOfMonth, 
-  endOfMonth, 
-  differenceInDays, 
+import {
+  format,
+  addDays,
+  subDays,
+  eachDayOfInterval,
+  isSameDay,
+  isToday,
+  startOfMonth,
+  endOfMonth,
+  differenceInDays,
   parseISO,
   isValid
 } from 'date-fns';
-import { 
-  Calendar as CalendarIcon, 
-  ChevronLeft, 
-  ChevronRight, 
-  Plus, 
+import {
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
   AlertCircle,
   Clock,
   User,
@@ -62,25 +62,25 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   // Sync custom scrollbar track/thumb with grid scroll position
   const updateCustomScrollbar = () => {
     if (!gridRef.current || !scrollTrackRef.current || !scrollThumbRef.current) return;
-    
+
     const { scrollLeft, scrollWidth, clientWidth } = gridRef.current;
     const trackWidth = scrollTrackRef.current.clientWidth;
-    
+
     if (scrollWidth <= clientWidth) {
       scrollThumbRef.current.style.display = 'none';
       return;
     }
-    
+
     scrollThumbRef.current.style.display = 'block';
-    
+
     // Calculate size and offset
     const thumbWidth = Math.max(30, trackWidth * (clientWidth / scrollWidth));
     const maxScrollLeft = scrollWidth - clientWidth;
     const maxThumbLeft = trackWidth - thumbWidth;
-    
+
     const ratio = maxScrollLeft > 0 ? scrollLeft / maxScrollLeft : 0;
     const thumbLeft = ratio * maxThumbLeft;
-    
+
     scrollThumbRef.current.style.width = `${thumbWidth}px`;
     scrollThumbRef.current.style.transform = `translateX(${thumbLeft}px)`;
   };
@@ -90,16 +90,16 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     if (grid) {
       grid.addEventListener('scroll', updateCustomScrollbar);
       updateCustomScrollbar();
-      
+
       const resizeObserver = new ResizeObserver(() => {
         updateCustomScrollbar();
       });
-      
+
       resizeObserver.observe(grid);
       if (scrollTrackRef.current) {
         resizeObserver.observe(scrollTrackRef.current);
       }
-      
+
       return () => {
         grid.removeEventListener('scroll', updateCustomScrollbar);
         resizeObserver.disconnect();
@@ -120,20 +120,20 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   const handleTrackClick = (e: React.MouseEvent) => {
     if (e.target === scrollThumbRef.current) return;
     if (!gridRef.current || !scrollTrackRef.current) return;
-    
+
     const rect = scrollTrackRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const trackWidth = rect.width;
-    
+
     const { scrollWidth, clientWidth } = gridRef.current;
     const thumbWidth = Math.max(30, trackWidth * (clientWidth / scrollWidth));
-    
+
     const thumbLeft = clickX - thumbWidth / 2;
     const maxThumbLeft = trackWidth - thumbWidth;
-    
+
     if (maxThumbLeft <= 0) return;
     const ratio = Math.max(0, Math.min(1, thumbLeft / maxThumbLeft));
-    
+
     const maxScrollLeft = scrollWidth - clientWidth;
     gridRef.current.scrollLeft = ratio * maxScrollLeft;
   };
@@ -142,7 +142,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   const handleThumbMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const startX = e.pageX;
     const startScrollLeft = gridRef.current?.scrollLeft || 0;
     const { scrollWidth, clientWidth } = gridRef.current || { scrollWidth: 0, clientWidth: 0 };
@@ -150,7 +150,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     const thumbWidth = Math.max(30, trackWidth * (clientWidth / scrollWidth));
     const maxScrollLeft = scrollWidth - clientWidth;
     const maxThumbLeft = trackWidth - thumbWidth;
-    
+
     if (maxThumbLeft <= 0) return;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -161,12 +161,12 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
         gridRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, startScrollLeft + deltaScroll));
       }
     };
-    
+
     const handleMouseUp = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-    
+
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
@@ -176,7 +176,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     if (e.touches.length === 0) return;
     e.preventDefault();
     e.stopPropagation();
-    
+
     const startX = e.touches[0].pageX;
     const startScrollLeft = gridRef.current?.scrollLeft || 0;
     const { scrollWidth, clientWidth } = gridRef.current || { scrollWidth: 0, clientWidth: 0 };
@@ -184,7 +184,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     const thumbWidth = Math.max(30, trackWidth * (clientWidth / scrollWidth));
     const maxScrollLeft = scrollWidth - clientWidth;
     const maxThumbLeft = trackWidth - thumbWidth;
-    
+
     if (maxThumbLeft <= 0) return;
 
     const handleTouchMove = (moveEvent: TouchEvent) => {
@@ -196,12 +196,12 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
         gridRef.current.scrollLeft = Math.max(0, Math.min(maxScrollLeft, startScrollLeft + deltaScroll));
       }
     };
-    
+
     const handleTouchEnd = () => {
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-    
+
     document.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('touchend', handleTouchEnd);
   };
@@ -246,8 +246,8 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
 
   // Drag and drop interaction handlers
   const handleTaskBarMouseDown = (
-    e: React.MouseEvent, 
-    task: Task, 
+    e: React.MouseEvent,
+    task: Task,
     resizeMode: 'start' | 'due' | null = null
   ) => {
     if (isReadOnly) return;
@@ -331,10 +331,10 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
         if (res.data.success) {
           toast.success("Task schedule updated successfully");
           if (setTasks) {
-            setTasks(prev => prev.map(t => t._id === taskId ? { 
-              ...t, 
-              startDate: newStart.toISOString(), 
-              dueDate: newDue.toISOString() 
+            setTasks(prev => prev.map(t => t._id === taskId ? {
+              ...t,
+              startDate: newStart.toISOString(),
+              dueDate: newDue.toISOString()
             } : t));
           }
         } else {
@@ -362,7 +362,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     try {
       const start = date;
       const due = addDays(date, 1); // default to 1 day span
-      
+
       const res = await api.put(`/tasks/${taskId}`, {
         startDate: start.toISOString(),
         dueDate: due.toISOString()
@@ -371,10 +371,10 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
       if (res.data.success) {
         toast.success("Task scheduled successfully");
         if (setTasks) {
-          setTasks(prev => prev.map(t => t._id === taskId ? { 
-            ...t, 
-            startDate: start.toISOString(), 
-            dueDate: due.toISOString() 
+          setTasks(prev => prev.map(t => t._id === taskId ? {
+            ...t,
+            startDate: start.toISOString(),
+            dueDate: due.toISOString()
           } : t));
         }
       } else {
@@ -389,14 +389,14 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (
-      target.closest('.cursor-grab') || 
-      target.closest('button') || 
+      target.closest('.cursor-grab') ||
+      target.closest('button') ||
       target.closest('input') ||
       target.closest('.sticky')
     ) {
       return;
     }
-    
+
     setIsMouseDown(true);
     if (gridRef.current) {
       setStartX(e.pageX - gridRef.current.offsetLeft);
@@ -424,7 +424,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-320px)] lg:h-[calc(100vh-230px)] overflow-y-auto lg:overflow-hidden">
       {/* Left Sidebar: Unscheduled Tasks */}
       {showUnscheduled && (
-        <Card className="w-full lg:w-80 flex flex-col h-[300px] lg:h-full shrink-0 border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
+        <Card className="w-full lg:w-80 flex flex-col h-full lg:h-full shrink-0 border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
@@ -441,8 +441,8 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
               </div>
             ) : (
               unscheduledTasks.map(task => (
-                <div 
-                  key={task._id} 
+                <div
+                  key={task._id}
                   className="p-3 rounded-lg border bg-background/50 hover:bg-accent/40 transition-all cursor-pointer group shadow-sm flex flex-col gap-2"
                   onClick={() => onOpenDetail(task._id)}
                 >
@@ -454,7 +454,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                       {priorityConfig[task.priority].label}
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex -space-x-1 overflow-hidden">
                       {task.assignedTo && task.assignedTo.length > 0 ? (
@@ -482,9 +482,9 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                     {!isReadOnly && (
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             className="h-6 w-6 rounded hover:bg-accent opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -523,15 +523,15 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-8 text-xs font-semibold"
               onClick={() => setShowUnscheduled(!showUnscheduled)}
             >
               {showUnscheduled ? "Hide Unscheduled" : "Show Unscheduled"}
             </Button>
-            
+
             <div className="flex items-center gap-1 bg-background border rounded-lg p-1">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handlePrevMonth}>
                 <ChevronLeft className="h-4 w-4" />
@@ -551,7 +551,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
         </div>
 
         {/* Timeline Grid Content */}
-        <div 
+        <div
           className={cn(
             "flex-1 overflow-auto timeline-scrollbar select-none",
             isMouseDown ? "cursor-grabbing" : "cursor-grab"
@@ -570,7 +570,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
             </div>
           ) : (
             <div className="w-fit min-w-full select-none relative">
-              
+
               {/* Header Days Row */}
               <div className="flex border-b bg-muted/40 sticky top-0 z-20">
                 {/* Task Title header column */}
@@ -580,8 +580,8 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                 {/* Calendar Days */}
                 <div className="flex flex-1">
                   {days.map(day => (
-                    <div 
-                      key={day.toString()} 
+                    <div
+                      key={day.toString()}
                       className={cn(
                         "w-10 shrink-0 border-r py-2 text-center flex flex-col items-center justify-center text-xs font-semibold",
                         isToday(day) && "bg-primary/10 text-primary",
@@ -603,7 +603,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
 
                   // Calculate margins & widths
                   let totalSpan = differenceInDays(timelineEnd, timelineStart) + 1;
-                  
+
                   // Task bar start index
                   let startDayIdx = differenceInDays(start, timelineStart);
                   let dueDayIdx = differenceInDays(due, timelineStart);
@@ -642,14 +642,14 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                   return (
                     <div key={task._id} className="flex group/row hover:bg-accent/10 transition-colors h-12 items-center relative">
                       {/* Left Sticky Task Header */}
-                      <div 
+                      <div
                         className="w-[120px] sm:w-[180px] md:w-[280px] shrink-0 h-full border-r px-2 sm:px-4 flex items-center justify-between sticky left-0 bg-card z-20 shadow-[2px_0_5px_rgba(0,0,0,0.02)] cursor-pointer after:absolute after:inset-0 after:bg-accent/10 after:opacity-0 group-hover/row:after:opacity-100 after:pointer-events-none"
                         onClick={() => onOpenDetail(task._id)}
                       >
                         <span className="text-xs font-semibold truncate min-w-0 group-hover/row:text-primary transition-colors">
                           {task.title}
                         </span>
-                        
+
                         <div className="flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity flex-shrink-0 ml-1 sm:ml-2 hidden sm:flex">
                           <Badge variant="outline" className="text-[9px] px-1 py-0 rounded font-medium text-muted-foreground uppercase bg-background">
                             {task.status}
@@ -662,13 +662,13 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                         {/* Background lines mapping */}
                         <div className="absolute inset-0 flex pointer-events-none">
                           {days.map((day, i) => (
-                            <div 
-                              key={i} 
+                            <div
+                              key={i}
                               className={cn(
                                 "w-10 shrink-0 border-r h-full",
                                 isToday(day) && "bg-primary/5",
                                 (day.getDay() === 0 || day.getDay() === 6) && "bg-muted/5"
-                              )} 
+                              )}
                             />
                           ))}
                         </div>
@@ -689,7 +689,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
                           >
                             {/* Resize handle left */}
                             {!isReadOnly && (
-                              <div 
+                              <div
                                 className="absolute left-0 top-0 bottom-0 w-1.5 cursor-ew-resize opacity-0 group-hover/bar:opacity-100 bg-foreground/20 hover:bg-foreground/40 rounded-l"
                                 onMouseDown={(e) => handleTaskBarMouseDown(e, task, 'start')}
                               />
@@ -702,7 +702,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
 
                             {/* Resize handle right */}
                             {!isReadOnly && (
-                              <div 
+                              <div
                                 className="absolute right-0 top-0 bottom-0 w-1.5 cursor-ew-resize opacity-0 group-hover/bar:opacity-100 bg-foreground/20 hover:bg-foreground/40 rounded-r"
                                 onMouseDown={(e) => handleTaskBarMouseDown(e, task, 'due')}
                               />
@@ -723,18 +723,18 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
           <div className="px-6 py-3 border-t bg-muted/10 dark:bg-card/40 flex items-center justify-between gap-4 select-none shrink-0">
             {/* Left & Right quick scroll buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
-              <Button 
-                variant="outline" 
-                size="icon" 
+              <Button
+                variant="outline"
+                size="icon"
                 className="h-7 w-7 rounded-md border-border bg-background hover:bg-accent text-foreground transition-colors"
                 onClick={() => handleScrollStep('left')}
                 title="Scroll Left"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              <Button 
-                variant="outline" 
-                size="icon" 
+              <Button
+                variant="outline"
+                size="icon"
                 className="h-7 w-7 rounded-md border-border bg-background hover:bg-accent text-foreground transition-colors"
                 onClick={() => handleScrollStep('right')}
                 title="Scroll Right"
@@ -744,13 +744,13 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
             </div>
 
             {/* Custom scroll track & thumb with padding for mobile touch targets */}
-            <div 
+            <div
               ref={scrollTrackRef}
               className="flex-1 py-2.5 cursor-pointer relative flex items-center group/track"
               onClick={handleTrackClick}
             >
               <div className="w-full h-2 bg-muted/40 dark:bg-muted/20 group-hover/track:bg-muted/65 dark:group-hover/track:bg-muted/30 transition-colors rounded-full relative flex items-center">
-                <div 
+                <div
                   ref={scrollThumbRef}
                   className="h-1.5 bg-primary/40 hover:bg-primary/65 active:bg-primary/85 transition-all rounded-full absolute cursor-grab active:cursor-grabbing border border-background/20"
                   onMouseDown={handleThumbMouseDown}
