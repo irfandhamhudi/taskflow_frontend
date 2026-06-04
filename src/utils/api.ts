@@ -9,4 +9,18 @@ const api = axios.create({
   withCredentials: true, // penting untuk cookie token
 });
 
+// Request interceptor to attach Authorization header if token exists in localStorage
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default api;

@@ -69,7 +69,7 @@ export function RegisterForm({
         });
         if (res.data.success) {
           toast.success("Google sign up successful!");
-          login(res.data.data);
+          login(res.data.data, res.data.token);
           navigate("/dashboard");
         }
       } catch (error: any) {

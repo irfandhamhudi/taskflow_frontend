@@ -51,7 +51,7 @@ export function LoginForm({
       const res = await api.post("/auth/login", data);
       if (res.data.success) {
         toast.success(res.data.message || "Login successful!");
-        login(res.data.data); // Update context state immediately
+        login(res.data.data, res.data.token); // Update context state immediately
         navigate("/dashboard");
       }
     } catch (error: any) {
@@ -73,7 +73,7 @@ export function LoginForm({
         });
         if (res.data.success) {
           toast.success("Google login successful!");
-          login(res.data.data);
+          login(res.data.data, res.data.token);
           navigate("/dashboard");
         }
       } catch (error: any) {

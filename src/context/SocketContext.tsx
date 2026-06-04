@@ -31,10 +31,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     const cleanApiUrl = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
+    const token = localStorage.getItem('token');
 
     const socketIo = io(cleanApiUrl, {
       withCredentials: true,
       transports: ['polling', 'websocket'],
+      auth: { token },
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,

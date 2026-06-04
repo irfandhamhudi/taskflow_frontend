@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import api from "../utils/api";
 import { cn } from "../lib/utils";
 import { Button } from "../components/ui/button";
+import { useAuth } from "../context/AuthContext";
 import {
   Field,
   FieldDescription,
@@ -33,6 +34,7 @@ export default function OTPForm() {
   const navigate = useNavigate();
 
   const email = searchParams.get("email") || "";
+  const { login } = useAuth();
 
   const {
     handleSubmit,
@@ -71,6 +73,11 @@ export default function OTPForm() {
         }
 
         toast.success(response.data?.message || "OTP verified successfully!");
+
+        // Update auth state with verified user data and token
+        if (response.data?.data) {
+          login(response.data.data, response.data.token);
+        }
 
         // Backend already sets auth cookie → go straight to dashboard
         navigate("/dashboard", { replace: true });

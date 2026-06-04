@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '../../../components/ui/skeleton';
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ export default function OAuthCallbackPage() {
 
   useEffect(() => {
     const code = searchParams.get("code");
-    
+
     if (!code) {
       toast.error("No authorization code found");
       navigate("/login");
@@ -30,7 +30,7 @@ export default function OAuthCallbackPage() {
         const res = await api.post("/auth/github-login", { code });
         if (res.data.success) {
           toast.success("GitHub login successful!");
-          login(res.data.data);
+          login(res.data.data, res.data.token);
           navigate("/dashboard");
         }
       } catch (error: any) {

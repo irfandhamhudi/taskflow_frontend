@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   refetchUser: () => Promise<void>;
-  login: (userData: User) => void;
+  login: (userData: User, token?: string) => void;
   logout: () => Promise<void>;
 }
 
@@ -27,12 +27,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(res.data.data);
       } else {
         setUser(null);
+        localStorage.removeItem('token');
       }
     } catch (error: any) {
       if (error.response?.status !== 401) {
         console.error('Fetch user error:', error);
       }
       setUser(null);
+      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
@@ -45,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       await api.post('/auth/logout');
+      localStorage.removeItem('token');
       setUser(null);
       window.location.href = '/login';
     } catch (error) {
@@ -52,7 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = (userData: User) => {
+  const login = (userData: User, token?: string) => {
+    if (token) {
+      localStorage.setItem('token', token);
+    }
     setUser(userData);
     setLoading(false);
   };
