@@ -509,7 +509,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
       )}
 
       {/* Right Sidebar: Timeline Gantt Grid */}
-      <Card className="flex-1 flex flex-col h-[500px] lg:h-full overflow-hidden border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
+      <Card className="flex-1 flex flex-col h-full overflow-hidden border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
         {/* Timeline Header */}
         <div className="p-4 border-b flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-muted/20">
           <div className="flex items-center gap-3">
