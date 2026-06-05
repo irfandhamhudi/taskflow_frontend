@@ -430,7 +430,7 @@ export default function TimelineView({ tasks, currentUserRole, onOpenDetail, set
     <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
       {/* Left Sidebar: Unscheduled Tasks */}
       {showUnscheduled && (
-        <Card className="w-full lg:w-80 flex flex-col h-[280px] lg:h-full shrink-0 border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
+        <Card className="w-full lg:w-80 flex flex-col h-[320px] lg:h-full shrink-0 border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
