@@ -71,7 +71,7 @@ export function ScheduleMeetings() {
     }
   };
 
-  const isZoomConnected = !!user?.externalAccounts?.zoom?.accessToken;
+  const isZoomConnected = true; // Zoom is integrated globally at system level
   const isGoogleConnected = !!user?.externalAccounts?.google?.accessToken;
 
   return (
@@ -97,7 +97,6 @@ export function ScheduleMeetings() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem 
-                onClick={() => isZoomConnected ? null : handleConnect('zoom')}
                 className="flex items-center justify-between py-3 cursor-default"
               >
                 <div className="flex items-center gap-3">
@@ -110,36 +109,7 @@ export function ScheduleMeetings() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                  {isZoomConnected ? (
-                    <>
-                      <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 py-0 h-5">Connected</Badge>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-6 px-2 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={async () => {
-                          try {
-                            await meetingService.disconnectPlatform('zoom');
-                            toast.success("Zoom disconnected");
-                            refetchUser();
-                          } catch (err: any) {
-                            toast.error(err.message);
-                          }
-                        }}
-                      >
-                        Disconnect
-                      </Button>
-                    </>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="h-6 px-2 text-[10px]"
-                      onClick={() => handleConnect('zoom')}
-                    >
-                      Link Account
-                    </Button>
-                  )}
+                  <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 py-0 h-5">Integrated</Badge>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem 

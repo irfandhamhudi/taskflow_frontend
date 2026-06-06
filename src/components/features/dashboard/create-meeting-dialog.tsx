@@ -23,7 +23,7 @@ export function CreateMeetingDialog({ onCreated, user }: { onCreated: () => void
     projectId: "",
   });
 
-  const isZoomConnected = !!user?.externalAccounts?.zoom?.accessToken;
+  const isZoomConnected = true; // Zoom is integrated globally at system level
   const isGoogleConnected = !!user?.externalAccounts?.google?.accessToken;
 
   const handleProjectChange = (projId: string) => {
